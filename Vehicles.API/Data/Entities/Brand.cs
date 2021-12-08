@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace Vehicles.API.Data.Entities
@@ -31,5 +33,7 @@ namespace Vehicles.API.Data.Entities
         //[Required(ErrorMessage = "El campo {0} es obligatorio.")]
         [Display(Name = "Estado")]
         public bool IsActive { get; set; }
-    }
+
+		public ICollection<Vehicle> Vehicles { get; set; }
+	}
 }

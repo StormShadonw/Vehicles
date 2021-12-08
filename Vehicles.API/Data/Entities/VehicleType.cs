@@ -34,5 +34,7 @@ namespace Vehicles.API.Data.Entities
 		//[Required(ErrorMessage = "El campo {0} es obligatorio.")]
 		[Display(Name = "Estado")]
         public bool IsActive { get; set; }
-    }
+
+		public ICollection<Vehicle> Vehicles { get; set; }
+	}
 }
