@@ -68,5 +68,8 @@ namespace Vehicles.API.Data.Entities
 		//[Required(ErrorMessage = "El campo {0} es obligatorio.")]
 		[Display(Name = "Estado")]
 		public bool IsActive { get; set; }
+
+		[Display(Name = "# Vehiculos")]
+		public int VehiclesCount => Vehicles == null ? 0 : Vehicles.Count;
 	}
 }
