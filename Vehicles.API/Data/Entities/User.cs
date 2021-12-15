@@ -19,7 +19,6 @@ namespace Vehicles.API.Data.Entities
 		public string LastName { get; set; }
 
 		[Display(Name = "Tipo de documento")]
-		[Required(ErrorMessage = "El campo {0} es obligatorio.")]
 		public DocumentType DocumentType { get; set; }
 
 		[Display(Name = "Documento")]
@@ -38,7 +37,7 @@ namespace Vehicles.API.Data.Entities
 		[Display(Name = "Foto")]
 		public string ImageFullPath => ImageId == Guid.Empty 
 			? $"https://localhost:44342//images/noimage.png" 
-			: $"https://vehicleszuluprep.blob.core.windows.net/users/{ImageId}";
+			: $"https://vehiclesjorge.blob.core.windows.net/users/{ImageId}";
 
 		[Display(Name = "Tipo de usuario")]
 		public UserType UserType { get; set; }

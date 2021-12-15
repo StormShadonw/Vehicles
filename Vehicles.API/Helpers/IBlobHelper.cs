@@ -9,7 +9,7 @@ namespace Vehicles.API.Helpers
 		Task<Guid> UploadBlobAsync(IFormFile file, string contanierName);
 		Task<Guid> UploadBlobAsync(byte[] file, string contanierName);
 		Task<Guid> UploadBlobAsync(string image, string contanierName);
-		Task<Guid> DeleteBlobAsync(Guid id, string contanierName);
+		Task DeleteBlobAsync(Guid id, string contanierName);
 
 	}
 }

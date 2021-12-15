@@ -3,6 +3,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Blob;
 using System;
+using System.IO;
 using System.Threading.Tasks;
 
 namespace Vehicles.API.Helpers
@@ -12,28 +13,45 @@ namespace Vehicles.API.Helpers
 		private readonly CloudBlobClient _blobClient;
 		public BlobHelper(IConfiguration configuration)
 		{
-			string keys = configuration["Blob.ConnectionString"];
+			string keys = configuration["Blob:ConnectionString"];
 			CloudStorageAccount storageAccount = CloudStorageAccount.Parse(keys);
 			_blobClient = storageAccount.CreateCloudBlobClient();
 		}
-		public Task<Guid> DeleteBlobAsync(Guid id, string contanierName)
+		public async Task DeleteBlobAsync(Guid id, string contanierName)
 		{
-			throw new NotImplementedException();
+			CloudBlobContainer container = _blobClient.GetContainerReference(contanierName);
+			CloudBlockBlob blockBlob = container.GetBlockBlobReference($"{id}");
+			await blockBlob.DeleteAsync();
 		}
 
-		public Task<Guid> UploadBlobAsync(IFormFile file, string contanierName)
+		public async Task<Guid> UploadBlobAsync(byte[] file, string contanierName)
 		{
-			throw new NotImplementedException();
+			MemoryStream stream = new MemoryStream(file);
+			Guid name = Guid.NewGuid();
+			CloudBlobContainer container = _blobClient.GetContainerReference(contanierName);
+			CloudBlockBlob blockBob = container.GetBlockBlobReference($"{name}");
+			await blockBob.UploadFromStreamAsync(stream);
+			return name;
 		}
 
-		public Task<Guid> UploadBlobAsync(byte[] file, string contanierName)
+		public async Task<Guid> UploadBlobAsync(IFormFile file, string contanierName)
 		{
-			throw new NotImplementedException();
+			Stream stream = file.OpenReadStream();
+			Guid name = Guid.NewGuid();
+			CloudBlobContainer container = _blobClient.GetContainerReference(contanierName);
+			CloudBlockBlob blockBlob = container.GetBlockBlobReference($"{name}");
+			await blockBlob.UploadFromStreamAsync(stream);
+			return name;
 		}
 
-		public Task<Guid> UploadBlobAsync(string image, string contanierName)
+		public async Task<Guid> UploadBlobAsync(string image, string contanierName)
 		{
-			throw new NotImplementedException();
+			Stream stream = File.OpenRead(image);
+			Guid name = Guid.NewGuid();
+			CloudBlobContainer container = _blobClient.GetContainerReference(contanierName);
+			CloudBlockBlob blockBlob = container.GetBlockBlobReference($"{name}");
+			await blockBlob.UploadFromStreamAsync(stream);
+			return name;
 		}
 	}
 }

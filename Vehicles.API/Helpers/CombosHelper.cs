@@ -13,7 +13,7 @@ namespace Vehicles.API.Helpers
 		{
 			_context = context;
 		}
-		public IEnumerable<SelectListItem> GetCombosBrands()
+		public IEnumerable<SelectListItem> GetComboBrands()
 		{
 			List<SelectListItem> list = _context.Brands.Select(x => new SelectListItem
 			{
@@ -25,7 +25,7 @@ namespace Vehicles.API.Helpers
 			return list;
 		}
 
-		public IEnumerable<SelectListItem> GetCombosDocumentTypes()
+		public IEnumerable<SelectListItem> GetComboDocumentTypes()
 		{
 			List<SelectListItem> list = _context.DocumentTypes.Select(x => new SelectListItem
 			{
@@ -37,7 +37,7 @@ namespace Vehicles.API.Helpers
 			return list;
 		}
 
-		public IEnumerable<SelectListItem> GetCombosProcedures()
+		public IEnumerable<SelectListItem> GetComboProcedures()
 		{
 			List<SelectListItem> list = _context.Procedures.Select(x => new SelectListItem
 			{
@@ -49,7 +49,7 @@ namespace Vehicles.API.Helpers
 			return list;
 		}
 
-		public IEnumerable<SelectListItem> GetCombosVehicleTypes()
+		public IEnumerable<SelectListItem> GetComboVehicleTypes()
 		{
 			List<SelectListItem> list = _context.VehicleTypes.Select(x => new SelectListItem
 			{
