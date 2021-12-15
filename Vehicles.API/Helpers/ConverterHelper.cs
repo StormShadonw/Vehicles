@@ -52,6 +52,7 @@ namespace Vehicles.API.Helpers
 				UserName = user.Email,
 				UserType = user.UserType,
 				Vehicles = user.Vehicles,
+				ImageId = user.ImageId,
 			};
 		}
 	}
