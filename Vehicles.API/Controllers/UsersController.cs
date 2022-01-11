@@ -412,6 +412,192 @@ namespace Vehicles.API.Controllers
 			return View(model);
 		}
 
+		public async Task<IActionResult> DetailsVehicle(int? id)
+		{
+			if (id == null)
+			{
+				return NotFound();
+			}
+			Vehicle vehicle = await _context.Vehicles
+				.Include(x => x.User)
+				.Include(x => x.VehicleType)
+				.Include(x => x.Brand)
+				.Include(x => x.VehiclePhotos)
+				.Include(x => x.Histories)
+				.ThenInclude(x => x.Details)
+				.ThenInclude(x => x.Procedure)
+				.Include(x => x.Histories)
+				.ThenInclude(x => x.User)
+				.FirstOrDefaultAsync(x => x.Id == id);
+			if (vehicle == null)
+			{
+				return NotFound();
+			}
+			return View(vehicle);
+		}
+
+		public async Task<IActionResult> AddHistory(int? id)
+		{
+			if (id == null)
+			{
+				return NotFound();
+			}
+
+			Vehicle vehicle = await _context.Vehicles.FindAsync(id);
+			if (vehicle == null)
+			{
+				return NotFound();
+			}
+
+			HistoryViewModel model = new HistoryViewModel
+			{
+				VehicleId = vehicle.Id
+			};
+
+			return View(model);
+		}
+
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		public async Task<IActionResult> AddHistory(HistoryViewModel model)
+		{
+			if (ModelState.IsValid)
+			{
+				Vehicle vehicle = await _context.Vehicles
+					.Include(x => x.Histories)
+					.FirstOrDefaultAsync(x => x.Id == model.VehicleId);
+
+				if (vehicle == null)
+				{
+					return NotFound();
+				}
+
+				User user = await _userHelper.GetUserAsync(User.Identity.Name);
+				History history = new History
+				{
+					Date = DateTime.Now,
+					Mileage = model.Mileage,
+					Remarks = model.Remarks,
+					User = user,
+					CreateDate = DateTime.Now,
+					CreatedBy = Environment.UserName,
+				};
+
+				if(vehicle.Histories == null)
+				{
+					vehicle.Histories = new List<History>();
+				}
+
+				vehicle.Histories.Add(history);
+				_context.Vehicles.Update(vehicle);
+				await _context.SaveChangesAsync();
+
+				return RedirectToAction("DetailsVehicle", new {id = vehicle.Id});
+			}
+
+			return View(model);
+
+		}
+
+
+		public async Task<IActionResult> EditHistory(int? id)
+		{
+			if (id == null)
+			{
+				return NotFound();
+			}
+
+			History history = await _context.Histories
+				.Include(x => x.Vehicle)
+				.FirstOrDefaultAsync(x => x.Id == id);
+
+			if(history == null)
+			{
+				return NotFound();
+			}
+
+			HistoryViewModel model = new HistoryViewModel
+			{
+				Mileage = history.Mileage,
+				Remarks = history.Remarks,
+				VehicleId = history.Vehicle.Id
+			};
+
+			return View(model);
+		}
+
+
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		public async Task<IActionResult> EditHistory(int? id, HistoryViewModel historyViewModel)
+		{
+			if (ModelState.IsValid)
+			{
+					History history = await _context.Histories.FindAsync(id);
+					history.Mileage = historyViewModel.Mileage;
+					history.Remarks = historyViewModel.Remarks;
+					history.UpdateDate = DateTime.Now;
+					history.UpdatedBy = Environment.UserName;
+					_context.Histories.Update(history);
+					await _context.SaveChangesAsync();
+					return RedirectToAction("DetailsVehicle", new { id = historyViewModel.VehicleId });
+			}
+			return View(historyViewModel);
+		}
+
+
+		public async Task<IActionResult> DeleteHistory(int? id)
+		{
+			if (id == null)
+			{
+				return NotFound();
+			}
+
+			History history = await _context.Histories
+				.Include(x => x.Details)
+				.Include(x => x.Vehicle)
+				.FirstOrDefaultAsync(x => x.Id == id);
+
+			if (history == null)
+			{
+				return NotFound();
+			}
+
+			//await _blobHelper.DeleteBlobAsync(user.ImageId, "users");
+			_context.Histories.Remove(history);
+			await _context.SaveChangesAsync();
+			return RedirectToAction(nameof(DetailsVehicle), new { id = history.Vehicle.Id });
+		}
+
+		public async Task<IActionResult> DetailsHistory(int? id)
+		{
+			if (id == null)
+			{
+				return NotFound();
+			}
+
+			History history = await _context.Histories
+				.Include(x => x.Details)
+				.ThenInclude(x => x.Procedure)
+				.Include(x => x.Vehicle)
+				.ThenInclude(x => x.VehiclePhotos)
+				.FirstOrDefaultAsync(x => x.Id == id);
+
+			if (history == null)
+			{
+				return NotFound();
+			}
+
+			return View(history);
+		}
+
+
+
+
+
+
+
+
 	}
 
 }

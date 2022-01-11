@@ -14,7 +14,7 @@ namespace Vehicles.API.Data.Entities
 		public Vehicle Vehicle { get; set; }
 
 		[Display(Name = "Fecha")]
-		[DisplayFormat(DataFormatString = "{0:yyyy/MM/dd}")]
+		[DisplayFormat(DataFormatString = "{0:yyyy/MM/dd hh:mm tt}")]
 		[Required(ErrorMessage = "El campo {0} es obligatorio.")]
 		public DateTime Date { get; set; }
 
@@ -62,5 +62,10 @@ namespace Vehicles.API.Data.Entities
 		[Display(Name = "Actualizado por")]
 		[MaxLength(50, ErrorMessage = "El campo {0} no puede tener mas de {1} carácteres.")]
 		public string UpdatedBy { get; set; }
+
+		[Display(Name = "Fecha")]
+		[DisplayFormat(DataFormatString = "{0:yyyy/MM/dd hh:mm tt}")]
+		[Required(ErrorMessage = "El campo {0} es obligatorio.")]
+		public DateTime DateLocal => Date.ToLocalTime();
 	}
 }
