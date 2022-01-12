@@ -47,5 +47,10 @@ namespace Vehicles.API.Controllers
 			return RedirectToAction(nameof(Index), "Home");
 		}
 
+		public IActionResult NotAuthorized()
+		{
+			return View();
+		}
+
 	}
 }
